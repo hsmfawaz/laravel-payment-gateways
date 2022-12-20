@@ -8,12 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('payment_gateways_table', function (Blueprint $table) {
+        Schema::create('gateway_payments', function (Blueprint $table) {
             $table->id();
-
-            // add fields
-
+            $table->string('ref');
+            $table->unsignedDecimal('paid_amount', 12);
+            $table->string('status')->index();
+            $table->morphs('model');
+            $table->string('gateway');
+            $table->json('gateway_response')->nullable();
             $table->timestamps();
         });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('gateway_payments');
     }
 };

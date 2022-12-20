@@ -2,7 +2,6 @@
 
 namespace Hsmfawaz\PaymentGateways;
 
-use Hsmfawaz\PaymentGateways\Commands\PaymentGatewaysCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,8 +17,6 @@ class PaymentGatewaysServiceProvider extends PackageServiceProvider
         $package
             ->name('payment-gateways')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_payment_gateways_table')
-            ->hasCommand(PaymentGatewaysCommand::class);
+            ->hasMigration('create_payment_gateways_table');
     }
 }
