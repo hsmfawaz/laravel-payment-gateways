@@ -82,6 +82,7 @@ class FawryPayment implements Arrayable
             'gateway_response' => [
                 'request_id'              => $this->request_id,
                 'fawry_ref_number'        => $this->fawry_ref_number,
+                'status_description'      => request('statusDescription', 'unknown'),
                 'status'                  => $this->order_status,
                 'payment_method'          => $this->payment_method,
                 'payment_time'            => $this->payment_time,
