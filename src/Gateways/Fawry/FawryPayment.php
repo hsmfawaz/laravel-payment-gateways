@@ -69,8 +69,9 @@ class FawryPayment implements Arrayable
 
     public function attachTo(Model $model): ?GatewayPayment
     {
-        if ($this->pending() || GatewayPayment::where('ref', $this->merchant_ref_number)->exists()) {
-            return null;
+        $payment = GatewayPayment::where('ref', $this->merchant_ref_number)->first();
+        if ($payment !== null || $this->pending()) {
+            return $payment;
         }
 
         return GatewayPayment::create([
