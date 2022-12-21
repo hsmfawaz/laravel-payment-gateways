@@ -2,7 +2,10 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 
+use Hsmfawaz\PaymentGateways\Enum\OrderStatus;
+use Hsmfawaz\PaymentGateways\Models\GatewayPayment;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class FawryPayment implements Arrayable
@@ -62,5 +65,29 @@ class FawryPayment implements Arrayable
     public function toArray()
     {
         return get_object_vars($this);
+    }
+
+    public function attachTo(Model $model)
+    {
+        if ($this->pending() || GatewayPayment::where('ref', $this->merchant_ref_number)->exists()) {
+            return;
+        }
+
+        return GatewayPayment::create([
+            'ref'              => $this->merchant_ref_number,
+            'model_id'         => $model->getKey(),
+            'model_type'       => $model->getMorphClass(),
+            'paid_amount'      => $this->payment_amount,
+            'gateway_response' => [
+                'request_id'              => $this->request_id,
+                'fawry_ref_number'        => $this->fawry_ref_number,
+                'status'                  => $this->order_status,
+                'payment_method'          => $this->payment_method,
+                'payment_time'            => $this->payment_time,
+                'payment_refrence_number' => $this->payment_refrence_number
+            ],
+            'gateway'          => 'fawry',
+            'status'           => $this->paid() ? OrderStatus::PAID : OrderStatus::FAILED,
+        ]);
     }
 }

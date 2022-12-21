@@ -25,7 +25,7 @@ class FawryGateway
     /**
      * @throws PaymentNotFoundException
      */
-    public function get(string $ref)
+    public function get(string $ref): FawryPayment
     {
         $response = $this->request()->get('payments/status/v2', $this->queryParams([
                 'merchantCode'      => $this->merchant_code,
