@@ -10,6 +10,14 @@ it('can get a payment', function () {
     expect($fawry->merchant_ref_number)->toBe('eWg|random|1671514464.7811');
 });
 
+it('get capture token url', function () {
+    $fawry = PaymentGatewaysFacade::fawry()
+                                  ->captureCardToken(
+                                      PaymentGatewaysFacade::getRef(Str::random(3)), 'http://google.com'
+                                  );
+    expect($fawry)->not->toBeEmpty();
+});
+
 it('can initiate a new payment', function () {
     $pendingPayment = new PendingPayment(
         ref: PaymentGatewaysFacade::getRef(Str::random(3)),

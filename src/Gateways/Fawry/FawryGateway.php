@@ -11,10 +11,20 @@ class FawryGateway
     protected string $merchant_code;
     protected string $security_key;
     protected string $base_url;
+    protected bool $live = false;
 
     public function __construct()
     {
         $this->setup();
+    }
+
+    public function captureCardToken(string $ref, string $returnUrl)
+    {
+        $baseUrl = $this->live
+            ? 'https://www.atfawry.com/atfawry/plugin/card-token'
+            : 'https://atfawry.fawrystaging.com/atfawry/plugin/card-token';
+
+        return $baseUrl."?accNo=".$this->merchant_code."&customerProfileId=".$ref."&returnUrl=".$returnUrl;
     }
 
     public function create(PendingPayment $payment)
@@ -50,7 +60,8 @@ class FawryGateway
         $config = config('payment-gateways.gateways.fawry');
         $this->merchant_code = $config['merchant_code'];
         $this->security_key = $config['security_key'];
-        $this->base_url = $config['live'] ? $config['live_url'] : $config['sandbox_url'];
+        $this->live = (bool) $config['live'];
+        $this->base_url = $this->live ? $config['live_url'] : $config['sandbox_url'];
         if (blank($this->merchant_code) || blank($this->security_key)) {
             throw new \RuntimeException("Payment Gateway: Fawry is missing configuration keys");
         }
