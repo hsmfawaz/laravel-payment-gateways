@@ -80,4 +80,31 @@ class FawryNewPayment
             ? 'https://atfawry.com/fawrypay-api/api/payments/init'
             : 'https://atfawry.fawrystaging.com/fawrypay-api/api/payments/init';
     }
+
+    public function charge(): array
+    {
+        $endpoint = config('payment-gateways.gateways.fawry.live', false)
+            ? "https://www.atfawry.com/ECommerceWeb/Fawry/payments/charge"
+            : "https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/charge";
+
+
+        $data = $this->paymentData() + [
+                'amount'        => $this->payment->totalAmount(),
+                'cvv'           => $this->payment->cardCvv,
+                'cardToken'     => $this->payment->cardToken,
+                'signature'     => $this->getChargeSignature(),
+                'paymentMethod' => $this->payment->method
+            ];
+        $response = Http::asJson()->acceptJson()->post($endpoint, $data);
+        if (! $response->ok() || $response->json('code') !== null) {
+            throw new PaymentGatewayException($response->json('description', 'Cant charge the selected credit card'));
+        }
+
+        return $response->json();
+    }
+
+    protected function getChargeSignature(): string
+    {
+        return $this->signature($this->payment->ref.$this->payment->method.$this->payment->totalAmount().$this->payment->cardToken.$this->payment->cardCvv);
+    }
 }

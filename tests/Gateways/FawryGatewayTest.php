@@ -19,6 +19,7 @@ it('get capture token url', function () {
 });
 it('get tokens list', function () {
     $tokens = PaymentGatewaysFacade::fawry()->tokensList('105425');
+//    dump($tokens);
     expect($tokens)->toBeArray()->not->toBeEmpty();
 });
 
@@ -35,10 +36,8 @@ it('can initiate a new payment', function () {
         customer_email: fake()->email,
         customer_phone: '+201008448891',
         customer_name: fake()->name,
-        return_url: 'http://itrainer.codebase.com/redirect/payment',
         currency: 'EGP',
         description: 'Test package',
-        expire_after: 24 * 60,
         items: [
             [
                 'id'       => 1,
@@ -46,7 +45,36 @@ it('can initiate a new payment', function () {
                 'price'    => 100.50
             ]
         ],
+        expire_after: 24 * 60,
+        return_url: 'http://itrainer.codebase.com/redirect/payment',
     );
     $result = PaymentGatewaysFacade::fawry()->create($pendingPayment)->paymentUrl();
     expect($result)->not()->toBeEmpty();
+});
+it('can charge using card token and cvv', function () {
+    $tokens = PaymentGatewaysFacade::fawry()->tokensList('105425');
+    expect($tokens)->toBeArray()->not->toBeEmpty();
+    $pendingPayment = new PendingPayment(
+        ref: PaymentGatewaysFacade::getRef(Str::random(3)),
+        preferred_language: 'en',
+        customer_email: fake()->email,
+        customer_phone: '+201008448891',
+        customer_name: fake()->name,
+        currency: 'EGP',
+        description: 'Test package',
+        items: [
+            [
+                'id'       => 1,
+                'quantity' => 2,
+                'price'    => 100.50
+            ]
+        ],
+        method: 'CARD',
+        cardToken: $tokens[0]->token,
+        cardCvv: '123'
+    );
+    $result = PaymentGatewaysFacade::fawry()->create($pendingPayment)->charge();
+    expect($result)->not()->toBeEmpty();
+    //todo need better testing
+
 });
