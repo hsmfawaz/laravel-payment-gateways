@@ -5,17 +5,27 @@ use Hsmfawaz\PaymentGateways\PendingPayment;
 use Illuminate\Support\Str;
 
 it('can get a payment', function () {
-    $fawry = PaymentGatewaysFacade::fawry()->get('eWg|random|1671514464.7811');
-    expect($fawry->paid())->toBeTrue();
-    expect($fawry->merchant_ref_number)->toBe('eWg|random|1671514464.7811');
+    $payment = PaymentGatewaysFacade::fawry()->get('eWg|random|1671514464.7811');
+    expect($payment->paid())->toBeTrue();
+    expect($payment->merchant_ref_number)->toBe('eWg|random|1671514464.7811');
 });
 
 it('get capture token url', function () {
-    $fawry = PaymentGatewaysFacade::fawry()
-                                  ->captureCardToken(
-                                      PaymentGatewaysFacade::getRef(Str::random(3)), 'http://google.com'
-                                  );
-    expect($fawry)->not->toBeEmpty();
+    $url = PaymentGatewaysFacade::fawry()
+                                ->captureCardToken(
+                                    PaymentGatewaysFacade::getRef(Str::random(3)), 'http://google.com'
+                                );
+    expect($url)->not->toBeEmpty();
+});
+it('get tokens list', function () {
+    $tokens = PaymentGatewaysFacade::fawry()->tokensList('105425');
+    expect($tokens)->toBeArray()->not->toBeEmpty();
+});
+
+it('delete token', function () {
+    $tokens = PaymentGatewaysFacade::fawry()->tokensList('105425');
+    $result = PaymentGatewaysFacade::fawry()->deleteToken('105425', $tokens[0]?->token ?? '');
+    expect($result)->toBeTrue();
 });
 
 it('can initiate a new payment', function () {

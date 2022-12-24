@@ -18,10 +18,20 @@ return new class extends Migration
             $table->json('gateway_response')->nullable();
             $table->timestamps();
         });
+        Schema::create('gateway_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->string('brand');
+            $table->string('token');
+            $table->string('last_four_digits');
+            $table->timestamp('creation_date');
+            $table->morphs('model');
+            $table->timestamps();
+        });
     }
 
     public function down()
     {
+        Schema::dropIfExists('gateway_tokens');
         Schema::dropIfExists('gateway_payments');
     }
 };
