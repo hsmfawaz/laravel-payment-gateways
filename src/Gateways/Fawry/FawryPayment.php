@@ -49,7 +49,7 @@ class FawryPayment implements Arrayable
 
     public function pending()
     {
-        return $this->order_status === 'New';
+        return $this->order_status === 'New' || ($this->order_status === 'UNPAID' && $this->payment_method === 'PAYATFAWRY');
     }
 
     public function refunded()
