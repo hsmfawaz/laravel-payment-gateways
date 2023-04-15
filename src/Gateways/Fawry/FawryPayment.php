@@ -85,8 +85,8 @@ class FawryPayment implements Arrayable
                 'status_description'      => request('statusDescription', 'unknown'),
                 'status'                  => $this->order_status,
                 'payment_method'          => $this->payment_method,
-                'payment_time'            => $this->payment_time,
-                'payment_refrence_number' => $this->payment_refrence_number
+                'payment_time'            => $this->payment_time ?? 0,
+                'payment_refrence_number' => $this->payment_refrence_number ?? 'unknown'
             ],
             'gateway'          => 'fawry',
             'status'           => $this->paid() ? OrderStatus::PAID : OrderStatus::FAILED,
