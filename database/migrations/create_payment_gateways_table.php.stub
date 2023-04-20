@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('gateway_payments', function (Blueprint $table) {
             $table->id();
             $table->string('ref');
-            $table->unsignedDecimal('paid_amount', 12);
-            $table->string('status')->index();
-            $table->morphs('model');
+            $table->string('gateway_ref');
             $table->string('gateway');
+            $table->unsignedDecimal('paid_amount', 12);
+            $table->morphs('model');
+            $table->string('status')->index();
             $table->json('gateway_response')->nullable();
             $table->timestamps();
         });

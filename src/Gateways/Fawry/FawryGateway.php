@@ -5,20 +5,9 @@ namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentNotFoundException;
 use Hsmfawaz\PaymentGateways\PendingPayment;
-use Illuminate\Support\Facades\Http;
 
-class FawryGateway
+class FawryGateway extends FawrySetup
 {
-    protected string $merchant_code;
-    protected string $security_key;
-    protected string $base_url;
-    protected bool $live = false;
-
-    public function __construct()
-    {
-        $this->setup();
-    }
-
     public function captureCardToken(string $ref, string $returnUrl)
     {
         $baseUrl = $this->live
@@ -81,37 +70,5 @@ class FawryGateway
         }
 
         return FawryPayment::fromRequest($response->json());
-    }
-
-    protected function request()
-    {
-        return Http::baseUrl($this->base_url);
-    }
-
-    private function setup()
-    {
-        $config = config('payment-gateways.gateways.fawry');
-        $this->merchant_code = $config['merchant_code'];
-        $this->security_key = $config['security_key'];
-        $this->live = (bool) $config['live'];
-        $this->base_url = $this->live ? $config['live_url'] : $config['sandbox_url'];
-        if (blank($this->merchant_code) || blank($this->security_key)) {
-            throw new \RuntimeException("Payment Gateway: Fawry is missing configuration keys");
-        }
-    }
-
-    private function signature(string $content)
-    {
-        return hash('sha256', $this->merchant_code.$content.$this->security_key);
-    }
-
-    private function queryParams(array $array): string
-    {
-        $result = [];
-        foreach ($array as $key => $value) {
-            $result[] = $key."=".$value;
-        }
-
-        return implode('&', $result);
     }
 }

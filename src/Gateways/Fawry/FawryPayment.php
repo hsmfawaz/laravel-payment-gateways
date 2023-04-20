@@ -2,7 +2,9 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 
-use Hsmfawaz\PaymentGateways\Enum\OrderStatus;
+use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
+use Hsmfawaz\PaymentGateways\Enum\PaymentCurrency;
+use Hsmfawaz\PaymentGateways\Enum\PaymentStatus;
 use Hsmfawaz\PaymentGateways\Models\GatewayPayment;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +30,7 @@ class FawryPayment implements Arrayable
     public int $order_expiry_date;
     public array $order_items;
     public array $three_ds_info;
+    private string $type = GatewaysEnum::FAWRY;
 
     public static function fromRequest(array $response): self
     {
@@ -76,20 +79,27 @@ class FawryPayment implements Arrayable
 
         return GatewayPayment::create([
             'ref'              => $this->merchant_ref_number,
+            'gateway_ref'      => $this->payment_refrence_number ?? 'unknown',
             'model_id'         => $model->getKey(),
             'model_type'       => $model->getMorphClass(),
             'paid_amount'      => $this->payment_amount,
+            'currency'         => $this->config('default_currency', PaymentCurrency::EGP),
             'gateway_response' => [
-                'request_id'              => $this->request_id,
-                'fawry_ref_number'        => $this->fawry_ref_number,
-                'status_description'      => request('statusDescription', 'unknown'),
-                'status'                  => $this->order_status,
-                'payment_method'          => $this->payment_method,
-                'payment_time'            => $this->payment_time ?? 0,
-                'payment_refrence_number' => $this->payment_refrence_number ?? 'unknown'
+                'request_id'               => $this->request_id,
+                'fawry_ref_number'         => $this->fawry_ref_number,
+                'status_description'       => request('statusDescription', 'unknown'),
+                'status'                   => $this->order_status,
+                'payment_method'           => $this->payment_method,
+                'payment_time'             => $this->payment_time ?? 0,
+                'payment_reference_number' => $this->payment_refrence_number ?? 'unknown'
             ],
-            'gateway'          => 'fawry',
-            'status'           => $this->paid() ? OrderStatus::PAID : OrderStatus::FAILED,
+            'gateway'          => $this->type,
+            'status'           => $this->paid() ? PaymentStatus::PAID : PaymentStatus::FAILED,
         ]);
+    }
+
+    private function config($key, $default = null)
+    {
+        return gateways_config($this->type, $key, $default);
     }
 }
