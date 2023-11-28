@@ -10,8 +10,11 @@ use Illuminate\Support\Str;
 class FawryCardToken implements Arrayable
 {
     public string $brand;
+
     public string $last_four_digits;
+
     public string $token;
+
     public int $creation_date;
 
     public static function fromRequest(array $response): self
@@ -35,12 +38,12 @@ class FawryCardToken implements Arrayable
         }
 
         return GatewayToken::create([
-            'brand'            => $this->brand,
+            'brand' => $this->brand,
             'last_four_digits' => $this->last_four_digits,
-            'token'            => $this->token,
-            'creation_date'    => $this->creation_date,
-            'model_id'         => $model->getKey(),
-            'model_type'       => $model->getMorphClass(),
+            'token' => $this->token,
+            'creation_date' => $this->creation_date,
+            'model_id' => $model->getKey(),
+            'model_type' => $model->getMorphClass(),
         ]);
     }
 
@@ -48,5 +51,4 @@ class FawryCardToken implements Arrayable
     {
         return get_object_vars($this);
     }
-
 }

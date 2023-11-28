@@ -20,6 +20,7 @@ class PendingPayment implements Arrayable
         public string $method = 'gateway',
         public string $cardToken = '',
         public string $cardCvv = '',
+        public bool $installment = false,
     ) {
     }
 
