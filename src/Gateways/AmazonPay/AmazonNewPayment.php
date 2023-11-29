@@ -41,11 +41,10 @@ class AmazonNewPayment
             'merchant_identifier' => AmazonConfig::get()->merchant_code,
             'language' => $this->payment->preferred_language,
             'command' => 'PURCHASE',
-            'merchant_reference' => $this->payment->ref,
+            'merchant_reference' => str_replace('|', '-', $this->payment->ref),
             'amount' => $amount,
             'currency' => $this->payment->currency,
             'return_url' => $this->payment->return_url,
-            'customer_name ' => $this->payment->customer_name,
             'customer_email' => $this->payment->customer_email,
             'order_description' => $this->payment->description,
         ];

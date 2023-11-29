@@ -2,11 +2,12 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 
+use Hsmfawaz\PaymentGateways\Contracts\Gateway;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentNotFoundException;
 use Hsmfawaz\PaymentGateways\PendingPayment;
 
-class FawryGateway extends FawrySetup
+class FawryGateway extends FawrySetup implements Gateway
 {
     public function captureCardToken(string $ref, string $returnUrl)
     {
