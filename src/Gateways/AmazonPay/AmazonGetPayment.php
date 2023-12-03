@@ -15,7 +15,7 @@ class AmazonGetPayment
         $url = $this->baseUrl();
         $data = $this->getData($ref);
         $response = Http::asJson()->post($url, $data);
-        if (! $response->ok() || $response->json('code') !== null) {
+        if (! $response->ok() || blank($response->json('transaction_status'))) {
             throw new PaymentNotFoundException(
                 $response->json('description', 'Cant fetch payment ref : '.$ref)
             );
@@ -34,14 +34,14 @@ class AmazonGetPayment
     private function toPaidPayment(AmazonPayment $payment): PaidPayment
     {
         return new PaidPayment(
-            ref: $payment->merchant_ref_number,
+            ref: $payment->ref,
             gateway: GatewaysEnum::FAWRY,
-            amount: $payment->payment_amount,
+            amount: $payment->amount,
             status: $payment->status,
             customer: new PaymentCustomer(
-                name: $payment->customer_name,
-                phone: $payment->customer_mobile,
-                email: $payment->customer_mail,
+                name: "",
+                phone: "",
+                email: "",
             ),
             payment: $payment,
         );
