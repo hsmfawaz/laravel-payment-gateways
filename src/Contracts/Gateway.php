@@ -7,7 +7,7 @@ use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 
 interface Gateway
 {
-    public function get(string $ref): PaidPayment;
+    public function get(string $ref): ?PaidPayment;
 
     public function create(PendingPayment $payment);
 }

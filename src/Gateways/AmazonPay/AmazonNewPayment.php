@@ -11,15 +11,10 @@ class AmazonNewPayment
     {
     }
 
-    public function toResponse()
-    {
-        return $this->toForm();
-    }
-
     public function toForm(): string
     {
         $properties = "";
-        $redirectUrl = AmazonConfig::get()->base_url."/paymentPage";
+        $redirectUrl = $this->baseUrl();
 
         foreach ($this->paymentData() as $key => $property) {
             $properties .= "<input type='hidden' name='$key' value='$property' />\n";
@@ -51,22 +46,20 @@ class AmazonNewPayment
         if ($this->payment->installment) {
             $data['installments'] = 'STANDALONE';
         }
-        $data['signature'] = $this->signature($data);
+        $data['signature'] = AmazonSignature::get($data);
 
         return $data;
     }
 
-    private function signature(array $data)
+    public function toResponse()
     {
-        $shaString = '';
-        ksort($data);
-        foreach ($data as $key => $value) {
-            $shaString .= "$key=$value";
-        }
+        return $this->toForm();
+    }
 
-        $requestPhrase = AmazonConfig::get()->request_phrase;
-        $shaString = $requestPhrase.$shaString.$requestPhrase;
-
-        return hash("SHA256", $shaString);
+    private function baseUrl(): string
+    {
+        return AmazonConfig::get()->live ?
+            'https://checkout.payfort.com/FortAPI/paymentPage' :
+            'https://sbcheckout.payfort.com/FortAPI/paymentPage';
     }
 }

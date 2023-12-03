@@ -14,8 +14,6 @@ class AmazonConfig
 
     public string $response_phrase;
 
-    public string $base_url;
-
     public bool $live = false;
 
     public static self|null $instance = null;
@@ -38,7 +36,6 @@ class AmazonConfig
         $this->request_phrase = $config['request_phrase'];
         $this->response_phrase = $config['response_phrase'];
         $this->live = (bool) $config['live'];
-        $this->base_url = $this->live ? $config['live_url'] : $config['sandbox_url'];
         if (blank($this->merchant_code) || blank($this->security_key)) {
             throw new \RuntimeException("Payment Gateway: Amazon is missing configuration keys");
         }

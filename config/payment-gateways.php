@@ -21,8 +21,6 @@ return [
         GatewaysEnum::AMAZON => [
             'default_currency' => PaymentCurrency::EGP,
             'live' => env('PAYMENT_AMAZON_LIVE', false),
-            'live_url' => 'https://checkout.payfort.com/FortAPI',
-            'sandbox_url' => 'https://sbcheckout.payfort.com/FortAPI',
             'merchant_code' => env('PAYMENT_AMAZON_MERCHANT_CODE', 'spqybZZo'),
             'security_key' => env('PAYMENT_AMAZON_SECURITY_KEY', 'ugenF1e24gcemBEvEkEY'),
             'request_phrase' => env('PAYMENT_AMAZON_REQUEST_PHRASE', '955EDcJRono0VU.gwNFe4o*{'),
