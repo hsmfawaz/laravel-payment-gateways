@@ -1,7 +1,7 @@
 <?php
 
+use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Facades\PaymentGatewaysFacade;
-use Hsmfawaz\PaymentGateways\PendingPayment;
 use Illuminate\Support\Str;
 
 it('can get a payment', function () {

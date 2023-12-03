@@ -2,8 +2,8 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\AmazonPay;
 
+use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Enum\PaymentCurrency;
-use Hsmfawaz\PaymentGateways\PendingPayment;
 
 class AmazonNewPayment
 {

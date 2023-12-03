@@ -14,6 +14,8 @@ class FawryPayment implements Arrayable
 {
     public string $request_id;
 
+    public string $status;
+
     public string $fawry_ref_number;
 
     public string $merchant_ref_number;
@@ -59,6 +61,12 @@ class FawryPayment implements Arrayable
                 $obj->$snakeKey = $value;
             }
         }
+        $obj->status = match (true) {
+            $obj->paid() => PaymentStatus::PAID,
+            $obj->pending() => PaymentStatus::PENDING,
+            $obj->refunded() => PaymentStatus::REFUNDED,
+            default => PaymentStatus::FAILED,
+        };
 
         return $obj;
     }

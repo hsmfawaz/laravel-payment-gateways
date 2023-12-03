@@ -3,8 +3,8 @@
 namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 
 use Carbon\Carbon;
+use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
-use Hsmfawaz\PaymentGateways\PendingPayment;
 use Illuminate\Support\Facades\Http;
 
 class FawryNewPayment

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hsmfawaz\PaymentGateways;
+namespace Hsmfawaz\PaymentGateways\DTO;
 
 use Illuminate\Contracts\Support\Arrayable;
 
