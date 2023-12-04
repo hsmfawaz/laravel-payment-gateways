@@ -35,7 +35,7 @@ class AmazonGetPayment
     {
         return new PaidPayment(
             ref: $payment->ref,
-            gateway: GatewaysEnum::FAWRY,
+            gateway: GatewaysEnum::AMAZON,
             amount: $payment->amount,
             status: $payment->status,
             customer: new PaymentCustomer(
