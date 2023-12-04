@@ -67,14 +67,13 @@ class AmazonPayment
 
         return GatewayPayment::create([
             'ref' => $this->ref,
-            'gateway_ref' => $this->payment_refrence_number ?? 'unknown',
+            'gateway_ref' => $this->fort_id ?? 'unknown',
             'model_id' => $model->getKey(),
             'model_type' => $model->getMorphClass(),
             //paid_amount has to be dived by the currency cent multiplier
             'paid_amount' => $this->amount,
             'currency' => AmazonConfig::get()->default_currency,
             'gateway_response' => [
-                'fort_id' => $this->fort_id,
                 'transaction_status' => $this->transaction_status,
             ],
             'gateway' => GatewaysEnum::AMAZON,
