@@ -2,7 +2,10 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\AmazonPay;
 
+use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Enum\PaymentStatus;
+use Hsmfawaz\PaymentGateways\Models\GatewayPayment;
+use Illuminate\Database\Eloquent\Model;
 
 class AmazonPayment
 {
@@ -21,6 +24,7 @@ class AmazonPayment
         $obj = new self();
 
         $obj->ref = $data['merchant_reference'];
+
         $obj->fort_id = $data['fort_id'];
         $obj->amount = $data['captured_amount'];
         $obj->transaction_status = $data['transaction_status'];
@@ -31,7 +35,7 @@ class AmazonPayment
             default => PaymentStatus::FAILED,
         };
 
-        return new static();
+        return $obj;
     }
 
     private function paid()
@@ -47,5 +51,39 @@ class AmazonPayment
     private function refunded()
     {
         return (int) $this->transaction_status === 6;
+    }
+
+    public function failed()
+    {
+        return ! $this->paid() && ! $this->pending() && ! $this->refunded();
+    }
+
+    public function attachTo(Model $model): ?GatewayPayment
+    {
+        $payment = GatewayPayment::where('ref', $this->ref)->first();
+        if ($payment !== null || $this->pending()) {
+            return $payment;
+        }
+
+        return GatewayPayment::create([
+            'ref' => $this->ref,
+            'gateway_ref' => $this->payment_refrence_number ?? 'unknown',
+            'model_id' => $model->getKey(),
+            'model_type' => $model->getMorphClass(),
+            //paid_amount has to be dived by the currency cent multiplier
+            'paid_amount' => $this->amount,
+            'currency' => AmazonConfig::get()->default_currency,
+            'gateway_response' => [
+                'fort_id' => $this->fort_id,
+                'transaction_status' => $this->transaction_status,
+            ],
+            'gateway' => GatewaysEnum::AMAZON,
+            'status' => $this->status,
+        ]);
+    }
+
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
