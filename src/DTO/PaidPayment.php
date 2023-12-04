@@ -12,6 +12,7 @@ class PaidPayment implements Arrayable
         public string $ref,
         public string $gateway,
         public float $amount,
+        public string $currency,
         public string $status,
         public PaymentCustomer $customer,
         public AmazonPayment|FawryPayment $payment,

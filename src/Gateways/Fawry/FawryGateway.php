@@ -14,11 +14,11 @@ class FawryGateway extends FawrySetup implements Gateway
 {
     public function captureCardToken(string $ref, string $returnUrl)
     {
-        $baseUrl = $this->live
+        $baseUrl = $this->config->live
             ? 'https://www.atfawry.com/atfawry/plugin/card-token'
             : 'https://atfawry.fawrystaging.com/atfawry/plugin/card-token';
 
-        return $baseUrl."?accNo=".$this->merchant_code."&customerProfileId=".$ref."&returnUrl=".$returnUrl;
+        return $baseUrl."?accNo=".$this->config->merchant_code."&customerProfileId=".$ref."&returnUrl=".$returnUrl;
     }
 
     /**
@@ -28,7 +28,7 @@ class FawryGateway extends FawrySetup implements Gateway
     public function tokensList(string $ref): array
     {
         $response = $this->request()->get('cards/cardToken', $this->queryParams([
-                'merchantCode' => $this->merchant_code,
+                'merchantCode' => $this->config->merchant_code,
                 'customerProfileId' => $ref,
                 'signature' => $this->signature($ref),
             ]
@@ -45,7 +45,7 @@ class FawryGateway extends FawrySetup implements Gateway
     public function deleteToken(string $ref, string $token): bool
     {
         $response = $this->request()->delete('cards/cardToken?'.$this->queryParams([
-                    'merchantCode' => $this->merchant_code,
+                    'merchantCode' => $this->config->merchant_code,
                     'cardToken' => $token,
                     'customerProfileId' => $ref,
                     'signature' => $this->signature($ref.$token),
@@ -55,7 +55,7 @@ class FawryGateway extends FawrySetup implements Gateway
         return (int) $response->json('statusCode') === 200;
     }
 
-    public function create(PendingPayment $payment)
+    public function create(PendingPayment $payment): FawryNewPayment
     {
         return new FawryNewPayment($payment);
     }
@@ -66,7 +66,7 @@ class FawryGateway extends FawrySetup implements Gateway
     public function get(string $ref): PaidPayment
     {
         $response = $this->request()->get('payments/status/v2', $this->queryParams([
-                'merchantCode' => $this->merchant_code,
+                'merchantCode' => $this->config->merchant_code,
                 'merchantRefNumber' => $ref,
                 'signature' => $this->signature($ref),
             ]
@@ -86,11 +86,12 @@ class FawryGateway extends FawrySetup implements Gateway
             ref: $payment->merchant_ref_number,
             gateway: GatewaysEnum::FAWRY,
             amount: $payment->payment_amount,
+            currency: $this->config->default_currency,
             status: $payment->status,
             customer: new PaymentCustomer(
-                name: $payment->customer_name,
-                phone: $payment->customer_mobile,
-                email: $payment->customer_mail,
+                name: $payment->customer_name ?? '',
+                phone: $payment->customer_mobile ?? '',
+                email: $payment->customer_mail ?? '',
             ),
             payment: $payment,
         );

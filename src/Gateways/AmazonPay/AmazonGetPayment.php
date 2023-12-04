@@ -37,6 +37,7 @@ class AmazonGetPayment
             ref: $payment->ref,
             gateway: GatewaysEnum::AMAZON,
             amount: $payment->amount,
+            currency: AmazonConfig::get()->default_currency,
             status: $payment->status,
             customer: new PaymentCustomer(
                 name: "",
