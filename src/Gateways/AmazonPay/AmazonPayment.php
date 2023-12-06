@@ -67,7 +67,7 @@ class AmazonPayment
 
         return GatewayPayment::create([
             'ref' => $this->ref,
-            'gateway_ref' => $this->fort_id ?? 'unknown',
+            'gateway_ref' => $this->fort_id,
             'model_id' => $model->getKey(),
             'model_type' => $model->getMorphClass(),
             //paid_amount has to be dived by the currency cent multiplier

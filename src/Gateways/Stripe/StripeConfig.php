@@ -8,6 +8,8 @@ class StripeConfig
 {
     public string $security_key;
 
+    public string $public_key;
+
     public string $webhook_key;
 
     public string $default_currency;
@@ -27,11 +29,12 @@ class StripeConfig
     private function load()
     {
         $config = gateways_config(GatewaysEnum::STRIPE);
-        $this->security_key = $config['security_key'];
-        $this->webhook_key = $config['webhook_key'];
-        $this->default_currency = $config['default_currency'];
-        if (blank($this->security_key)) {
+        if (blank($config['security_key']) || blank($config['webhook_key'])) {
             throw new \RuntimeException("Payment Gateway: stripe is missing configuration keys");
         }
+        $this->security_key = $config['security_key'];
+        $this->public_key = $config['public_key'];
+        $this->webhook_key = $config['webhook_key'];
+        $this->default_currency = $config['default_currency'];
     }
 }

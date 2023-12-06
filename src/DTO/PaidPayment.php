@@ -4,6 +4,7 @@ namespace Hsmfawaz\PaymentGateways\DTO;
 
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
+use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
 use Illuminate\Contracts\Support\Arrayable;
 
 class PaidPayment implements Arrayable
@@ -15,7 +16,7 @@ class PaidPayment implements Arrayable
         public string $currency,
         public string $status,
         public PaymentCustomer $customer,
-        public AmazonPayment|FawryPayment $payment,
+        public AmazonPayment|FawryPayment|StripePayment $payment,
     ) {
     }
 

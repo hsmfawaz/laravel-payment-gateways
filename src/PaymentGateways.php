@@ -3,9 +3,11 @@
 namespace Hsmfawaz\PaymentGateways;
 
 use Hsmfawaz\PaymentGateways\Contracts\Gateway;
+use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Facades\PaymentGatewaysFacade;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
+use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripeGateway;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentGateways
@@ -20,10 +22,16 @@ class PaymentGateways
         return new AmazonGateway();
     }
 
+    public function stripe(): StripeGateway
+    {
+        return new StripeGateway();
+    }
+
     public function gateway(string $paymentMethod = ''): Gateway
     {
         return match ($paymentMethod) {
-            'amazon', 'amazon-installment' => PaymentGatewaysFacade::amazon(),
+            GatewaysEnum::AMAZON, 'amazon-installment' => PaymentGatewaysFacade::amazon(),
+            GatewaysEnum::STRIPE => PaymentGatewaysFacade::stripe(),
             default => PaymentGatewaysFacade::fawry(),
         };
     }

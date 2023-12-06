@@ -24,6 +24,20 @@ class StripePaymentIntent
         ]);
     }
 
+    public function update(string $clientSecret)
+    {
+        return PaymentIntent::update(
+            $clientSecret,
+            [
+                'amount' => $this->payment->totalAmount() * PaymentCurrency::centsMultiplier($this->payment->currency),
+                'currency' => strtolower($this->payment->currency),
+                'metadata' => [
+                    'ref' => $this->payment->ref,
+                ],
+            ]
+        );
+    }
+
     public function toResponse()
     {
         $paymentIntent = $this->create();

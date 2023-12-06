@@ -2,10 +2,11 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\AmazonPay;
 
+use Hsmfawaz\PaymentGateways\Contracts\NewPayment;
 use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Enum\PaymentCurrency;
 
-class AmazonNewPayment
+class AmazonNewPayment implements NewPayment
 {
     public function __construct(protected PendingPayment $payment)
     {
@@ -51,7 +52,7 @@ class AmazonNewPayment
         return $data;
     }
 
-    public function toResponse()
+    public function toResponse(): string|array
     {
         return $this->toForm();
     }
@@ -61,5 +62,10 @@ class AmazonNewPayment
         return AmazonConfig::get()->live ?
             'https://checkout.payfort.com/FortAPI/paymentPage' :
             'https://sbcheckout.payfort.com/FortAPI/paymentPage';
+    }
+
+    public function getRef(): string
+    {
+        return str_replace('|', '-', $this->payment->ref);
     }
 }

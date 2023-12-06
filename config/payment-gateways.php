@@ -31,6 +31,7 @@ return [
         GatewaysEnum::STRIPE => [
             'default_currency' => env('PAYMENT_STRIPE_CURRENCY', PaymentCurrency::EGP),
             'security_key' => env('PAYMENT_STRIPE_SECURITY_KEY'),
+            'public_key' => env('PAYMENT_STRIPE_PUBLIC_KEY'),
             'webhook_key' => env('PAYMENT_STRIPE_WEBHOOK_KEY'),
             'payment_model' => StripePayment::class,
         ],

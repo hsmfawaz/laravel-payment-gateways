@@ -3,11 +3,12 @@
 namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
 
 use Carbon\Carbon;
+use Hsmfawaz\PaymentGateways\Contracts\NewPayment;
 use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Illuminate\Support\Facades\Http;
 
-class FawryNewPayment
+class FawryNewPayment implements NewPayment
 {
     private string $merchant_code;
 
@@ -19,7 +20,7 @@ class FawryNewPayment
         $this->security_key = config('payment-gateways.gateways.fawry.security_key');
     }
 
-    public function toResponse()
+    public function toResponse(): string|array
     {
         return $this->paymentUrl();
     }
@@ -114,5 +115,10 @@ class FawryNewPayment
     protected function getChargeSignature(): string
     {
         return $this->signature($this->payment->ref.$this->payment->method.$this->payment->totalAmount().$this->payment->cardToken.$this->payment->cardCvv);
+    }
+
+    public function getRef(): string
+    {
+        return $this->payment->ref;
     }
 }
