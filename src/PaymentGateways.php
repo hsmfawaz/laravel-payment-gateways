@@ -8,6 +8,7 @@ use Hsmfawaz\PaymentGateways\Facades\PaymentGatewaysFacade;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripeGateway;
+use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraGateway;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentGateways
@@ -27,11 +28,17 @@ class PaymentGateways
         return new StripeGateway();
     }
 
+    public function tamara(): TamaraGateway
+    {
+        return new TamaraGateway();
+    }
+
     public function gateway(string $paymentMethod = ''): Gateway
     {
         return match ($paymentMethod) {
             GatewaysEnum::AMAZON, 'amazon-installment' => PaymentGatewaysFacade::amazon(),
             GatewaysEnum::STRIPE => PaymentGatewaysFacade::stripe(),
+            GatewaysEnum::TAMARA => PaymentGatewaysFacade::tamara(),
             default => PaymentGatewaysFacade::fawry(),
         };
     }

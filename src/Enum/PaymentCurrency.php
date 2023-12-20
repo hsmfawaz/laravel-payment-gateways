@@ -4,6 +4,8 @@ namespace Hsmfawaz\PaymentGateways\Enum;
 
 class PaymentCurrency
 {
+    public const AED = 'AED';
+
     public const EGP = 'EGP';
 
     public const KWD = 'KWD';

@@ -9,4 +9,6 @@ class GatewaysEnum
     public const AMAZON = 'amazon';
 
     public const STRIPE = 'stripe';
+
+    public const TAMARA = 'tamara';
 }

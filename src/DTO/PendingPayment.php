@@ -24,6 +24,16 @@ class PendingPayment implements Arrayable
     ) {
     }
 
+    public function firstName()
+    {
+        return explode(' ', $this->customer_name)[0];
+    }
+
+    public function lastName()
+    {
+        return last(explode(' ', $this->customer_name));
+    }
+
     public function totalAmount(): float
     {
         return (float) number_format(collect($this->items)->sum(function ($i) {

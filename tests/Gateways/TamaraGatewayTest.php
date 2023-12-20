@@ -23,7 +23,7 @@ it('can initiate a new payment', function () {
         expire_after: 24 * 60,
         return_url: 'http://itrainer.codebase.com/redirect/payment',
     );
-    $result = PaymentGatewaysFacade::amazon()->create($pendingPayment)->toForm();
+    $result = PaymentGatewaysFacade::tamara()->create($pendingPayment)->toResponse();
     expect($result)->not()->toBeEmpty()
         ->and($result)->toContain($pendingPayment->ref);
 });
