@@ -11,4 +11,6 @@ class GatewaysEnum
     public const STRIPE = 'stripe';
 
     public const TAMARA = 'tamara';
+
+    public const TABBY = 'tabby';
 }

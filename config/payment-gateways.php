@@ -42,5 +42,11 @@ return [
             'security_key' => env('PAYMENT_TAMARA_SECURITY_KEY'),
             'payment_model' => TamaraPayment::class,
         ],
+        GatewaysEnum::TABBY => [
+            'default_currency' => env('PAYMENT_TAMARA_CURRENCY', PaymentCurrency::AED),
+            'live' => env('PAYMENT_TAMARA_LIVE', false),
+            'security_key' => env('PAYMENT_TAMARA_SECURITY_KEY'),
+            'payment_model' => TamaraPayment::class,
+        ],
     ],
 ];
