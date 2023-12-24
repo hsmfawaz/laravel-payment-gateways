@@ -4,9 +4,7 @@ namespace Hsmfawaz\PaymentGateways\Gateways\AmazonPay;
 
 use Hsmfawaz\PaymentGateways\Contracts\Gateway;
 use Hsmfawaz\PaymentGateways\DTO\PaidPayment;
-use Hsmfawaz\PaymentGateways\DTO\PaymentCustomer;
 use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
-use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 
 class AmazonGateway implements Gateway
 {

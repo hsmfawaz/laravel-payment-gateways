@@ -5,6 +5,7 @@ use Hsmfawaz\PaymentGateways\Enum\PaymentCurrency;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
+use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraPayment;
 use Hsmfawaz\PaymentGateways\PaymentRefGenerator;
 
@@ -43,10 +44,14 @@ return [
             'payment_model' => TamaraPayment::class,
         ],
         GatewaysEnum::TABBY => [
-            'default_currency' => env('PAYMENT_TAMARA_CURRENCY', PaymentCurrency::AED),
-            'live' => env('PAYMENT_TAMARA_LIVE', false),
-            'security_key' => env('PAYMENT_TAMARA_SECURITY_KEY'),
-            'payment_model' => TamaraPayment::class,
+            'default_currency' => env('PAYMENT_TABBY_CURRENCY', PaymentCurrency::AED),
+            'security_key' => env('PAYMENT_TABBY_SECURITY_KEY',
+                'sk_test_52f35ee8-1296-4f8a-9876-750b4883e561'),
+            'public_key' => env('PAYMENT_TABBY_PUBLIC_KEY',
+                'pk_test_f62f2071-09f5-46bf-8f3d-d1b98570a1d2'),
+            'merchant_code' => env('PAYMENT_TABBY_MERCHANT_CODE',
+                'SALAH SELEEM TEAM PERSONAL SPORT COACHING SERVICESare'),
+            'payment_model' => TabbyPayment::class,
         ],
     ],
 ];

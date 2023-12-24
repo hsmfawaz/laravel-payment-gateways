@@ -6,6 +6,7 @@ use Hsmfawaz\PaymentGateways\Contracts\Gateway;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripeGateway;
+use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraGateway;
 use Hsmfawaz\PaymentGateways\PaymentGateways;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static StripeGateway stripe()
  * @method static AmazonGateway amazon()
  * @method static TamaraGateway tamara()
+ * @method static TabbyGateway tabby()
  * @method static Gateway gateway(string $paymentMethod = '')
  * @see \Hsmfawaz\PaymentGateways\PaymentGateways
  */
