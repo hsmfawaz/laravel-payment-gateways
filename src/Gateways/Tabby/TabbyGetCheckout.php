@@ -7,7 +7,7 @@ use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Illuminate\Support\Facades\Http;
 
-class TabbyGetPayment
+class TabbyGetCheckout
 {
     public function handle(string $ref)
     {

@@ -8,7 +8,7 @@ it('can initiate a new payment', function () {
     $pendingPayment = new PendingPayment(
         ref: PaymentGatewaysFacade::getRef(Str::random(3)),
         preferred_language: 'en',
-        customer_email:"otp.rejected@tabby.ai",
+        customer_email: "otp.success@tabby.ai",
         customer_phone: '500000001',
         customer_name: fake()->name,
         currency: 'AED',
@@ -25,9 +25,11 @@ it('can initiate a new payment', function () {
     );
     $result = PaymentGatewaysFacade::tabby()->create($pendingPayment)->toResponse();
     expect($result)->not()->toBeEmpty();
-
 });
 //
 it('fetch payment', function () {
-    $result = PaymentGatewaysFacade::tabby()->get("b8c2a4b5-fd65-4665-b36f-5df5b732403b");
+    $result = PaymentGatewaysFacade::tabby()->get("557a1123-26e4-4e4e-8044-9019110998c4");
+});
+it('capture payment', function () {
+    $result = PaymentGatewaysFacade::tabby()->capture("55284759-cf4b-4d2e-bfd5-1dae1c875347",201);
 });
