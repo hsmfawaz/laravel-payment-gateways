@@ -54,17 +54,17 @@ class TabbyPayment implements Arrayable
         return $obj;
     }
 
-    private function paid()
+    public function paid()
     {
         return (int) $this->transaction_status === 'authorized';
     }
 
-    private function pending()
+    public function pending()
     {
         return (int) $this->transaction_status === 'created';
     }
 
-    private function refunded()
+    public function refunded()
     {
         return (int) $this->transaction_status === 'closed';
     }

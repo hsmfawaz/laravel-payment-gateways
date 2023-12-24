@@ -38,17 +38,17 @@ class AmazonPayment
         return $obj;
     }
 
-    private function paid()
+    public function paid()
     {
         return (int) $this->transaction_status === 14;
     }
 
-    private function pending()
+    public function pending()
     {
         return (int) $this->transaction_status === 19;
     }
 
-    private function refunded()
+    public function refunded()
     {
         return (int) $this->transaction_status === 6;
     }
