@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class TabbyNewPayment implements NewPayment
 {
+    public string $ref;
+
     public function __construct(protected PendingPayment $payment)
     {
     }
@@ -17,6 +19,7 @@ class TabbyNewPayment implements NewPayment
     public function toResponse(): string|array
     {
         $session = $this->createSession();
+        $this->ref = data_get($session, 'id');
         $url = data_get($session, 'configuration.available_products.installments.0.web_url');
 
         if (blank($url)) {
@@ -40,7 +43,7 @@ class TabbyNewPayment implements NewPayment
 
     public function getRef(): string
     {
-        return $this->payment->ref;
+        return $this->ref;
     }
 
     private function request(): PendingRequest
