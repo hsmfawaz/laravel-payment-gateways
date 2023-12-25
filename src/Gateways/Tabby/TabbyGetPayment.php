@@ -7,16 +7,16 @@ use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Illuminate\Support\Facades\Http;
 
-class TabbyGetCheckout
+class TabbyGetPayment
 {
     public function handle(string $ref)
     {
         $response = Http::withToken(TabbyConfig::get()->security_key)
             ->asJson()
             ->acceptJson()
-            ->get("https://api.tabby.ai/api/v2/checkout/{$ref}");
+            ->get("https://api.tabby.ai/api/v2/payments/{$ref}");
 
-        if (! $response->ok() || filled($response->json('error')) || blank($response->json('payment'))) {
+        if (! $response->ok() || filled($response->json('error'))) {
             throw new PaymentGatewayException(
                 $response->json('error', 'Tabby: Cant fetch Payment '.$ref)
             );

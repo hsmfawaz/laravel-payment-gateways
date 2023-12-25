@@ -15,19 +15,13 @@ class TabbyCapturePayment
             ->post("https://api.tabby.ai/api/v1/payments/{$paymentID}/captures", [
                 'amount' => $amount,
             ]);
-
         $closed = strtoupper($response->json('status')) === 'CLOSED';
-        if (! $response->ok() || ! $closed) {
+        if (! $response->ok()) {
             throw new PaymentGatewayException(
                 $response->json('error', 'Tabby: Cant capture Payment '.$paymentID)
             );
         }
 
-        return abs($this->totalAmount($response->json('captures', [])) - $amount);
-    }
-
-    private function totalAmount(array $captures)
-    {
-        return collect($captures)->sum('amount');
+        return $closed;
     }
 }

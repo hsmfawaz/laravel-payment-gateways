@@ -11,7 +11,7 @@ class TabbyGateway implements Gateway
 {
     public function get(string $ref): ?PaidPayment
     {
-        return (new TabbyGetCheckout())->handle($ref);
+        return (new TabbyGetPayment())->handle($ref);
     }
 
     public function capture(string $paymentID, float $amount)
