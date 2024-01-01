@@ -11,7 +11,7 @@ class CIBGateway implements Gateway
 {
     public function get(string $ref): ?PaidPayment
     {
-        return null;
+        return (new CIBGetPayment())->handle($ref);
     }
 
     public function create(PendingPayment $payment): NewPayment

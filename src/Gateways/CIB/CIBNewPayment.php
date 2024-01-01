@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Http;
 
 class CIBNewPayment implements NewPayment
 {
-    public string $ref;
-
     public function __construct(protected PendingPayment $payment)
     {
     }
@@ -19,7 +17,6 @@ class CIBNewPayment implements NewPayment
     public function toResponse(): string|array
     {
         $session = $this->createSession();
-        $this->ref = $session['successIndicator'];
 
         return $session['session']['id'];
     }
@@ -30,7 +27,7 @@ class CIBNewPayment implements NewPayment
         $response = $this->request()->post("/merchant/{$code}/session", $this->paymentData());
         if (! $response->created() || $response->json('result') !== 'SUCCESS') {
             throw new PaymentGatewayException(
-                $response->json('error', 'Cant initiate a new payment')
+                $response->json('error.explanation', 'Cant initiate a new payment')
             );
         }
 
@@ -39,7 +36,7 @@ class CIBNewPayment implements NewPayment
 
     public function getRef(): string
     {
-        return $this->ref;
+        return $this->payment->ref;
     }
 
     private function request(): PendingRequest
@@ -60,13 +57,15 @@ class CIBNewPayment implements NewPayment
             'apiOperation' => 'CREATE_CHECKOUT_SESSION',
             'interaction' => [
                 'operation' => 'PURCHASE',
-                'returnUrl' => $this->payment->return_url,
+                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
+                'cancelUrl' => $this->payment->return_url,
             ],
             'order' => [
                 'id' => $this->payment->ref,
                 'amount' => $this->payment->totalAmount(),
                 'currency' => $this->payment->currency,
                 'description' => $this->payment->description,
+                'notificationUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
             ],
         ];
     }

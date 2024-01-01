@@ -3,6 +3,7 @@
 namespace Hsmfawaz\PaymentGateways\DTO;
 
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonPayment;
+use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyPayment;
@@ -18,7 +19,7 @@ class PaidPayment implements Arrayable
         public string $currency,
         public string $status,
         public PaymentCustomer $customer,
-        public AmazonPayment|FawryPayment|StripePayment|TabbyPayment|TamaraPayment $payment,
+        public AmazonPayment|FawryPayment|StripePayment|TabbyPayment|TamaraPayment|CIBPayment $payment,
     ) {
     }
 
