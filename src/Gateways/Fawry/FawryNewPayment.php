@@ -10,14 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class FawryNewPayment implements NewPayment
 {
-    private string $merchant_code;
-
-    private string $security_key;
-
     public function __construct(protected PendingPayment $payment)
     {
-        $this->merchant_code = config('payment-gateways.gateways.fawry.merchant_code');
-        $this->security_key = config('payment-gateways.gateways.fawry.security_key');
     }
 
     public function toResponse(): string|array
@@ -42,7 +36,7 @@ class FawryNewPayment implements NewPayment
         $signatureContent = $this->payment->ref.$this->payment->return_url.$this->itemsSignature($items);
 
         return [
-            'merchantCode' => $this->merchant_code,
+            'merchantCode' => FawryConfig::get()->merchant_code,
             'merchantRefNum' => $this->payment->ref,
             'paymentExpiry' => Carbon::now()
                     ->addMinutes($this->payment->expire_after)->timestamp * 1000,
@@ -61,7 +55,9 @@ class FawryNewPayment implements NewPayment
 
     private function signature(string $content)
     {
-        return hash('sha256', $this->merchant_code.$content.$this->security_key);
+        $config = FawryConfig::get();
+
+        return hash('sha256', $config->merchant_code.$content.$config->security_key);
     }
 
     private function transformItems(array $items)
@@ -85,36 +81,9 @@ class FawryNewPayment implements NewPayment
 
     private function baseUrl()
     {
-        return config('payment-gateways.gateways.fawry.live', false)
+        return FawryConfig::get()->live
             ? 'https://atfawry.com/fawrypay-api/api/payments/init'
             : 'https://atfawry.fawrystaging.com/fawrypay-api/api/payments/init';
-    }
-
-    public function charge(): array
-    {
-        $endpoint = config('payment-gateways.gateways.fawry.live', false)
-            ? "https://www.atfawry.com/ECommerceWeb/Fawry/payments/charge"
-            : "https://atfawry.fawrystaging.com/ECommerceWeb/Fawry/payments/charge";
-
-        $data = $this->paymentData() + [
-                'amount' => $this->payment->totalAmount(),
-                'cvv' => $this->payment->cardCvv,
-                'cardToken' => $this->payment->cardToken,
-                'signature' => $this->getChargeSignature(),
-                'paymentMethod' => $this->payment->method,
-            ];
-        $response = Http::asJson()->acceptJson()->post($endpoint, $data);
-        if (! $response->ok() || $response->json('code') !== null) {
-            throw new PaymentGatewayException($response->json('description',
-                'Cant charge the selected credit card'));
-        }
-
-        return $response->json();
-    }
-
-    protected function getChargeSignature(): string
-    {
-        return $this->signature($this->payment->ref.$this->payment->method.$this->payment->totalAmount().$this->payment->cardToken.$this->payment->cardCvv);
     }
 
     public function getRef(): string

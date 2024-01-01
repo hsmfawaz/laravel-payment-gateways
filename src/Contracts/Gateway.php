@@ -9,5 +9,5 @@ interface Gateway
 {
     public function get(string $ref): ?PaidPayment;
 
-    public function create(PendingPayment $payment);
+    public function create(PendingPayment $payment): NewPayment;
 }

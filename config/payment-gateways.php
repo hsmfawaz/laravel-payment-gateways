@@ -3,6 +3,7 @@
 use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Enum\PaymentCurrency;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonPayment;
+use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyPayment;
@@ -49,6 +50,13 @@ return [
             'public_key' => env('PAYMENT_TABBY_PUBLIC_KEY', ''),
             'merchant_code' => env('PAYMENT_TABBY_MERCHANT_CODE', ''),
             'payment_model' => TabbyPayment::class,
+        ],
+        GatewaysEnum::CIB => [
+            'default_currency' => env('PAYMENT_CIB_CURRENCY', PaymentCurrency::EGP),
+            'base_url' => 'https://cibpaynow.gateway.mastercard.com/api/rest/version/62',
+            'merchant_code' => env('PAYMENT_CIB_MERCHANT_CODE', ''),
+            'security_key' => env('PAYMENT_CIB_SECURITY_KEY', ''),
+            'payment_model' => CIBPayment::class,
         ],
     ],
 ];
