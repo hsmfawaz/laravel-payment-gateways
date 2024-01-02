@@ -53,10 +53,13 @@ return [
         ],
         GatewaysEnum::CIB => [
             'default_currency' => env('PAYMENT_CIB_CURRENCY', PaymentCurrency::EGP),
-            'base_url' => 'https://cibpaynow.gateway.mastercard.com/api/rest/version/62',
+            'base_url' => 'https://cibpaynow.gateway.mastercard.com/api/rest/version/77',
             'merchant_code' => env('PAYMENT_CIB_MERCHANT_CODE', ''),
             'security_key' => env('PAYMENT_CIB_SECURITY_KEY', ''),
             'payment_model' => CIBPayment::class,
+            'merchant_name' => env('PAYMENT_CIB_MERCHANT_NAME', ''),
+            'merchant_logo' => env('PAYMENT_CIB_MERCHANT_LOGO', ''),
+            'merchant_website' => env('PAYMENT_CIB_MERCHANT_WEBSITE', ''),
         ],
     ],
 ];

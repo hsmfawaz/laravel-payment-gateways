@@ -12,6 +12,12 @@ class CIBConfig
 
     public string $merchant_code;
 
+    public string $merchant_name;
+
+    public string $merchant_logo;
+
+    public string $merchant_website;
+
     public string $default_currency;
 
     public static self|null $instance = null;
@@ -35,6 +41,9 @@ class CIBConfig
         $this->default_currency = $config['default_currency'];
         $this->security_key = $config['security_key'];
         $this->merchant_code = $config['merchant_code'];
+        $this->merchant_name = $config['merchant_name'];
+        $this->merchant_logo = $config['merchant_logo'];
+        $this->merchant_website = $config['merchant_website'];
         $this->base_url = $config['base_url'];
     }
 }

@@ -54,11 +54,23 @@ class CIBNewPayment implements NewPayment
     private function paymentData()
     {
         return [
-            'apiOperation' => 'CREATE_CHECKOUT_SESSION',
+            'apiOperation' => 'INITIATE_CHECKOUT',
+            'customer' => [
+                'email' => $this->payment->customer_email,
+                'firstName' => $this->payment->firstName(),
+                'lastName' => $this->payment->lastName(),
+                'mobilePhone' => $this->payment->customer_phone,
+            ],
             'interaction' => [
                 'operation' => 'PURCHASE',
+                'locale' => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
                 'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
                 'cancelUrl' => $this->payment->return_url,
+                'merchant' => [
+                    'name' => CIBConfig::get()->merchant_name,
+                    'logo' => CIBConfig::get()->merchant_logo,
+                    'url' => CIBConfig::get()->merchant_website,
+                ],
             ],
             'order' => [
                 'id' => $this->payment->ref,
