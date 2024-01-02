@@ -53,6 +53,8 @@ class CIBNewPayment implements NewPayment
 
     private function paymentData()
     {
+        $config = CIBConfig::get();
+
         return [
             'apiOperation' => 'INITIATE_CHECKOUT',
             'customer' => [
@@ -64,12 +66,12 @@ class CIBNewPayment implements NewPayment
             'interaction' => [
                 'operation' => 'PURCHASE',
                 'locale' => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
-                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
+                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref."&=merchant_code".$config->merchant_code,
                 'cancelUrl' => $this->payment->return_url,
                 'merchant' => [
-                    'name' => CIBConfig::get()->merchant_name,
-                    'logo' => CIBConfig::get()->merchant_logo,
-                    'url' => CIBConfig::get()->merchant_website,
+                    'name' => $config->merchant_name,
+                    'logo' => $config->merchant_logo,
+                    'url' => $config->merchant_website,
                 ],
             ],
             'order' => [
