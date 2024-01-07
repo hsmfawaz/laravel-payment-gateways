@@ -49,12 +49,23 @@ class FawryGetPayment
     private function request(string $ref)
     {
         $config = FawryConfig::get();
+        $query = $this->queryParams([
+            'merchantCode' => $config->merchant_code,
+            'merchantRefNumber' => $ref,
+            'signature' => $this->signature($ref),
+        ]);
 
         return Http::baseUrl($config->base_url)
-            ->get('payments/status/v2', http_build_query([
-                'merchantCode' => $config->merchant_code,
-                'merchantRefNumber' => $ref,
-                'signature' => $this->signature($ref),
-            ]));
+            ->get('payments/status/v2?'.$query);
+    }
+
+    protected function queryParams(array $array): string
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $result[] = $key."=".$value;
+        }
+
+        return implode('&', $result);
     }
 }
