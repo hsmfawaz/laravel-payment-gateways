@@ -66,7 +66,7 @@ class CIBNewPayment implements NewPayment
             'interaction' => [
                 'operation' => 'PURCHASE',
                 'locale' => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
-                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref."&=merchant_code".$config->merchant_code,
+                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref."&merchant_code=".$config->merchant_code,
                 'cancelUrl' => $this->payment->return_url,
                 'merchant' => [
                     'name' => $config->merchant_name,
