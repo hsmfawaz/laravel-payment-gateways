@@ -74,6 +74,11 @@ class TabbyNewPayment implements NewPayment
                     "zip" => "25314",
                     "address" => "3764 Al Urubah Rd",
                 ],
+                "buyer_history" => [
+                    "registered_since" => now()->toIso8601String(),
+                    "loyalty_level" => 0,
+                ],
+                "order_history" => [],
                 "order" => [
                     "reference_id" => $this->payment->ref,
                     "items" => $this->getItems(),
