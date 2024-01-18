@@ -4,7 +4,7 @@ namespace Hsmfawaz\PaymentGateways\Exceptions;
 
 class PaymentGatewayException extends \Exception
 {
-    protected string $response;
+    protected string $response = "";
 
     public function getResponse()
     {
