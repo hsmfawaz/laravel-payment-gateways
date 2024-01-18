@@ -17,10 +17,12 @@ class TabbyNewPayment implements NewPayment
     public function toResponse(): string|array
     {
         $session = $this->createSession();
+        $status = data_get($session, 'status', 'rejected');
         $url = data_get($session, 'configuration.available_products.installments.0.web_url');
 
-        if (blank($url)) {
-            throw new PaymentGatewayException('Cant get installment url');
+        if ($status === 'rejected' || blank($url)) {
+            $message = $this->rejectionMessage($session);
+            throw (new PaymentGatewayException(''))->setResponse($message);
         }
 
         return $url;
@@ -55,16 +57,18 @@ class TabbyNewPayment implements NewPayment
 
     private function paymentData()
     {
+        $buyer = array_filter([
+            "email" => $this->payment->customer_email,
+            "name" => $this->payment->customer_name,
+            "phone" => $this->payment->customer_phone,
+        ], 'filled');
+
         return [
             'payment' => [
                 "amount" => $this->payment->totalAmount(),
                 "currency" => $this->payment->currency,
                 "description" => $this->payment->description,
-                "buyer" => [
-                    "email" => $this->payment->customer_email,
-                    "name" => $this->payment->customer_name,
-                    "phone" => $this->payment->customer_phone,
-                ],
+                "buyer" => $buyer,
                 "shipping_address" => [
                     "city" => "Dubai",
                     "zip" => "25314",
@@ -94,5 +98,19 @@ class TabbyNewPayment implements NewPayment
             "quantity" => $i['quantity'],
             "unit_price" => $i['price'],
         ], $this->payment->items);
+    }
+
+    private function rejectionMessage($session): string
+    {
+        $reason = data_get(
+            $session, 'configuration.products.installments.rejection_reason', 'not_available'
+        );
+
+        return match ($reason) {
+            "not_available" => "Sorry, Tabby is unable to approve this purchase. Please use an alternative payment method for your order.",
+            "order_amount_too_high" => "This purchase is above your current spending limit with Tabby, try a smaller cart or use another payment method",
+            "order_amount_too_low" => "The purchase amount is below the minimum amount required to use Tabby, try adding more items or use another payment method",
+            default => "Sorry, Tabby is unable to approve this purchase"
+        };
     }
 }
