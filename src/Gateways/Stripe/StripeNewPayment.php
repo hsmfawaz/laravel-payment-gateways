@@ -29,8 +29,8 @@ class StripeNewPayment implements NewPayment
         $this->session = Session::create([
             'line_items' => $this->getLineItems(),
             'mode' => 'payment',
-            'success_url' => $this->payment->return_url."?session_id={CHECKOUT_SESSION_ID}",
-            'cancel_url' => $this->payment->return_url."?session_id={CHECKOUT_SESSION_ID}",
+            'success_url' => $this->getRedirectUrl(),
+            'cancel_url' => $this->getRedirectUrl(),
         ]);
     }
 
@@ -53,5 +53,13 @@ class StripeNewPayment implements NewPayment
     public function getRef(): string
     {
         return $this->session->id;
+    }
+
+    private function getRedirectUrl(): string
+    {
+        $query = parse_url($this->payment->return_url, PHP_URL_QUERY);
+        $query = (blank($query) ? '?' : '&').'session_id={CHECKOUT_SESSION_ID}';
+
+        return $this->payment->return_url.$query;
     }
 }
