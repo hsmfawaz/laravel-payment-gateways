@@ -26,12 +26,18 @@ class StripeNewPayment implements NewPayment
 
     public function createSession()
     {
-        $this->session = Session::create([
+        $data = [
             'line_items' => $this->getLineItems(),
             'mode' => 'payment',
             'success_url' => $this->getRedirectUrl(),
             'cancel_url' => $this->getRedirectUrl(),
-        ]);
+        ];
+
+        if (filled($this->payment->customer_email)){
+            $data['customer_email'] = $this->payment->customer_email;
+        }
+
+        $this->session = Session::create($data);
     }
 
     private function getLineItems()
