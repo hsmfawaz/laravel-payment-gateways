@@ -11,6 +11,7 @@ class CIBConfig
     public string $base_url;
 
     public string $merchant_code;
+    public string $installment_key;
 
     public string $merchant_name;
 
@@ -44,6 +45,7 @@ class CIBConfig
         $this->merchant_name = $config['merchant_name'];
         $this->merchant_logo = $config['merchant_logo'];
         $this->merchant_website = $config['merchant_website'];
+        $this->installment_key = $config['ticket_id'];
         $this->base_url = $config['base_url'];
     }
 }

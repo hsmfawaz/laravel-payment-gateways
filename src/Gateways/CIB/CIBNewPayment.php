@@ -45,42 +45,52 @@ class CIBNewPayment implements NewPayment
         $auth = base64_encode("merchant.{$config->merchant_code}:{$config->security_key}");
 
         return Http::asJson()
-            ->asJson()
-            ->acceptJson()
-            ->withToken($auth, 'Basic')
-            ->baseUrl($config->base_url);
+                   ->asJson()
+                   ->acceptJson()
+                   ->withToken($auth, 'Basic')
+                   ->baseUrl($config->base_url);
     }
 
     private function paymentData()
     {
         $config = CIBConfig::get();
-
-        return [
+        $data = [
             'apiOperation' => 'INITIATE_CHECKOUT',
-            'customer' => [
-                'email' => $this->payment->customer_email,
-                'firstName' => $this->payment->firstName(),
-                'lastName' => $this->payment->lastName(),
+            'customer'     => [
+                'email'       => $this->payment->customer_email,
+                'firstName'   => $this->payment->firstName(),
+                'lastName'    => $this->payment->lastName(),
                 'mobilePhone' => $this->payment->customer_phone,
             ],
-            'interaction' => [
+            'interaction'  => [
                 'operation' => 'PURCHASE',
-                'locale' => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
+                'locale'    => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
                 'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref."&merchant_code=".$config->merchant_code,
                 'cancelUrl' => $this->payment->return_url,
-                'merchant' => [
+                'merchant'  => [
                     'name' => $config->merchant_name,
                     'logo' => $config->merchant_logo,
-                    'url' => $config->merchant_website,
+                    'url'  => $config->merchant_website,
                 ],
             ],
-            'order' => [
-                'id' => $this->payment->ref,
-                'amount' => $this->payment->totalAmount(),
-                'currency' => $this->payment->currency,
-                'description' => $this->payment->description,
+            'order'        => [
+                'id'              => $this->payment->ref,
+                'amount'          => $this->payment->totalAmount(),
+                'currency'        => $this->payment->currency,
+                'description'     => $this->payment->description,
                 'notificationUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
             ],
         ];
+
+        if (filled($config->installment_key)) {
+            $data['airline'] = [
+                'ticket' => [
+                    'ticketNumber' => $config->installment_key
+                ]
+            ];
+        }
+        info($config->installment_key);
+
+        return $data;
     }
 }
