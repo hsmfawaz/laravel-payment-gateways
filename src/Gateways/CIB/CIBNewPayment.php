@@ -65,7 +65,9 @@ class CIBNewPayment implements NewPayment
             'interaction'  => [
                 'operation' => 'PURCHASE',
                 'locale'    => $this->payment->preferred_language === 'ar' ? "ar_EG" : "en_US",
-                'returnUrl' => $this->payment->return_url."?ref=".$this->payment->ref."&merchant_code=".$config->merchant_code,
+                'returnUrl' => $this->getUrl(
+                    $this->payment->return_url, "ref=".$this->payment->ref."&merchant_code=".$config->merchant_code
+                ),
                 'cancelUrl' => $this->payment->return_url,
                 'merchant'  => [
                     'name' => $config->merchant_name,
@@ -78,7 +80,7 @@ class CIBNewPayment implements NewPayment
                 'amount'          => $this->payment->totalAmount(),
                 'currency'        => $this->payment->currency,
                 'description'     => $this->payment->description,
-                'notificationUrl' => $this->payment->return_url."?ref=".$this->payment->ref,
+                'notificationUrl' => $this->getUrl($this->payment->return_url, "ref=".$this->payment->ref),
             ],
         ];
 
@@ -92,5 +94,13 @@ class CIBNewPayment implements NewPayment
         info($config->installment_key);
 
         return $data;
+    }
+
+    private function getUrl($url, $query): string
+    {
+        $params = parse_url($url, PHP_URL_QUERY);
+        $query = (blank($params) ? '?' : '&').$query;
+
+        return $url.$query;
     }
 }
