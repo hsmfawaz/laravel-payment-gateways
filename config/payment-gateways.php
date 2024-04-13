@@ -7,7 +7,6 @@ use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyPayment;
-use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraPayment;
 use Hsmfawaz\PaymentGateways\PaymentRefGenerator;
 
 return [
@@ -37,12 +36,6 @@ return [
             'public_key'       => env('PAYMENT_STRIPE_PUBLIC_KEY'),
             'webhook_key'      => env('PAYMENT_STRIPE_WEBHOOK_KEY'),
             'payment_model'    => StripePayment::class,
-        ],
-        GatewaysEnum::TAMARA => [
-            'default_currency' => env('PAYMENT_TAMARA_CURRENCY', PaymentCurrency::AED),
-            'live'             => env('PAYMENT_TAMARA_LIVE', false),
-            'security_key'     => env('PAYMENT_TAMARA_SECURITY_KEY'),
-            'payment_model'    => TamaraPayment::class,
         ],
         GatewaysEnum::TABBY  => [
             'default_currency' => env('PAYMENT_TABBY_CURRENCY', PaymentCurrency::AED),
