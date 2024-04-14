@@ -21,6 +21,7 @@ class PendingPayment implements Arrayable
         public string $cardToken = '',
         public string $cardCvv = '',
         public bool|int $installment = false,
+        public array $custom_data = []
     ) {
     }
 

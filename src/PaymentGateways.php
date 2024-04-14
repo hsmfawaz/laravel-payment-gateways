@@ -7,6 +7,7 @@ use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
+use Hsmfawaz\PaymentGateways\Gateways\MyFatoorah\MyFatoorahGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripeGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyGateway;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,11 @@ class PaymentGateways
         return new CIBGateway();
     }
 
+    public function myfatoorah(): MyFatoorahGateway
+    {
+        return new MyFatoorahGateway();
+    }
+
     public function gateway(string $paymentMethod = ''): Gateway
     {
         return match ($paymentMethod) {
@@ -45,6 +51,7 @@ class PaymentGateways
             GatewaysEnum::STRIPE => $this->stripe(),
             GatewaysEnum::TABBY => $this->tabby(),
             GatewaysEnum::CIB => $this->cib(),
+            GatewaysEnum::MYFATOORAH => $this->myfatoorah(),
             default => $this->fawry(),
         };
     }
