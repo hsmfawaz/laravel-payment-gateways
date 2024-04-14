@@ -16,7 +16,7 @@ class MyFatoorahGetPayment
         ]);
         if (! $response->ok() || ! $response->json('IsSuccess')) {
             throw new PaymentNotFoundException(
-                $response->json('description', 'Cant fetch payment ref : '.$ref)
+                $response->json('Message', 'Cant fetch payment ref : '.$ref)
             );
         }
 

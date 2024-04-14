@@ -9,6 +9,7 @@ use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 class MyFatoorahExecutePayment implements NewPayment
 {
     public string $invoiceID;
+    public string $recurringID;
 
     public function __construct(public PendingPayment $payment)
     {
@@ -16,7 +17,7 @@ class MyFatoorahExecutePayment implements NewPayment
 
     public function toResponse(): string|array
     {
-        $response = MyFatoorahConfig::get()->request()->post('v2/ExecutePayment', [
+        $data = [
             "CustomerName"      => $this->payment->customer_name,
             "CustomerEmail"     => $this->payment->customer_email,
             "InvoiceValue"      => $this->payment->totalAmount(),
@@ -26,19 +27,24 @@ class MyFatoorahExecutePayment implements NewPayment
             'CustomerReference' => $this->payment->ref,
             "UserDefinedField"  => json_encode($this->payment->custom_data),
             "SessionId"         => $this->payment->ref,
-//     "RecurringModel": {
-//         "RecurringType": "string",
-//         "IntervalDays": 0,
-//         "Iteration": 0,
-//         "RetryCount": 0
-//     },
-        ]);
+        ];
+
+        if ($this->payment->recurring) {
+            $data['RecurringModel'] = array_filter([
+                "RecurringType" => $this->payment->recurring->type,
+                "IntervalDays"  => $this->payment->recurring->interval,
+                "Iteration"     => $this->payment->recurring->iteration,
+                "RetryCount"    => $this->payment->recurring->retry_count,
+            ], fn ($i) => $i !== null);
+        }
+        $response = MyFatoorahConfig::get()->request()->post('v2/ExecutePayment', $data);
         if ($response->failed() || ! $response->json('IsSuccess')) {
             throw new PaymentGatewayException(
-                $response->json('error', 'Cant execute the payment')
+                $response->json('ValidationErrors.0.Error', 'Cant execute the payment')
             );
         }
         $this->invoiceID = $response->json('Data.InvoiceId');
+        $this->recurringID = $response->json('Data.RecurringId');
 
         return $response->json('Data.PaymentURL');
     }

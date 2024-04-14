@@ -21,7 +21,7 @@ class MyFatoorahSession
 
         if ($response->failed() || ! $response->json('IsSuccess')) {
             throw new PaymentGatewayException(
-                $response->json('error', 'Cant initiate a new session')
+                $response->json('Message', 'Cant initiate a new session')
             );
         }
 
@@ -43,7 +43,7 @@ class MyFatoorahSession
 
         if ($response->failed() || ! $response->json('IsSuccess')) {
             throw new PaymentGatewayException(
-                $response->json('error', 'Cant update the session')
+                $response->json('Message', 'Cant update the session')
             );
         }
 

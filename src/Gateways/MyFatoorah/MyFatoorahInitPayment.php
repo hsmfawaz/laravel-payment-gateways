@@ -27,7 +27,7 @@ class MyFatoorahInitPayment
 
         if ($response->failed() || ! $response->json('IsSuccess')) {
             throw new PaymentGatewayException(
-                $response->json('error', 'Cant initiate a new payment')
+                $response->json('Message', 'Cant initiate a new payment')
             );
         }
 
