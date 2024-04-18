@@ -21,8 +21,9 @@ class StripeGateway implements Gateway
 
     public function get(string $ref): ?PaidPayment
     {
-        $handler = match (str_starts_with($ref, 'pi_')) {
-            true => (new StripeGetPaymentIntent),
+        $handler = match (true) {
+            str_starts_with($ref, 'pi_') => (new StripeGetPaymentIntent),
+            str_starts_with($ref, 'in_') => (new StripeGetPaymentInvoice),
             default => (new StripeGetPaymentSession)
         };
 

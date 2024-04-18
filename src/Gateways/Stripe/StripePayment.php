@@ -9,6 +9,7 @@ use Hsmfawaz\PaymentGateways\Enum\PaymentStatus;
 use Hsmfawaz\PaymentGateways\Models\GatewayPayment;
 use Illuminate\Database\Eloquent\Model;
 use Stripe\Checkout\Session;
+use Stripe\Invoice;
 use Stripe\PaymentIntent;
 
 class StripePayment
@@ -41,6 +42,31 @@ class StripePayment
         return $obj;
     }
 
+    public static function fromInvoice(Invoice $invoice)
+    {
+        $obj = new self();
+        $obj->ref = $invoice->id;
+        $obj->currency = strtoupper($invoice->currency);
+        $obj->amount = $invoice->amount_paid / PaymentCurrency::centsMultiplier($obj->currency);
+
+        $obj->customer = new PaymentCustomer(
+            $invoice->customer_name ?? '',
+            $invoice->customer_phone ?? '',
+            $invoice->customer_email ?? '',
+        );
+
+        $obj->data = [
+            'subscription' => $invoice->subscription,
+            'subscription_details' => $invoice->subscription_details
+        ];
+
+        $obj->status = match ($invoice->status) {
+            'paid' => PaymentStatus::PAID,
+            default => PaymentStatus::FAILED,
+        };
+
+        return $obj;
+    }
     public function paid()
     {
         return $this->status === PaymentStatus::PAID;
@@ -80,7 +106,7 @@ class StripePayment
             'model_type' => $model->getMorphClass(),
             'paid_amount' => $this->amount,
             'currency' => $this->currency,
-            'gateway_response' => [],
+            'gateway_response' => $this->data ?? [],
             'gateway' => GatewaysEnum::STRIPE,
             'status' => $this->status,
         ]);
