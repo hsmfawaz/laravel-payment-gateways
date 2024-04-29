@@ -91,7 +91,6 @@ class CIBNewPayment implements NewPayment
                 ]
             ];
         }
-        info($config->installment_key);
 
         return $data;
     }
