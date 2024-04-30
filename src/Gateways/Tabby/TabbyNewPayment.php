@@ -22,7 +22,7 @@ class TabbyNewPayment implements NewPayment
 
         if ($status === 'rejected' || blank($url)) {
             $message = $this->rejectionMessage($session);
-            throw (new PaymentGatewayException(''))->setResponse($message);
+            throw (new PaymentGatewayException($message))->setResponse($message);
         }
 
         return $url;
