@@ -4,10 +4,10 @@ namespace Hsmfawaz\PaymentGateways;
 
 use Hsmfawaz\PaymentGateways\Contracts\Gateway;
 use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
-use Hsmfawaz\PaymentGateways\Facades\PaymentGatewaysFacade;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
+use Hsmfawaz\PaymentGateways\Gateways\Paymob\PaymobGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripeGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraGateway;
@@ -45,6 +45,11 @@ class PaymentGateways
         return new CIBGateway();
     }
 
+    public function paymob(): PaymobGateway
+    {
+        return new PaymobGateway();
+    }
+
     public function gateway(string $paymentMethod = ''): Gateway
     {
         return match ($paymentMethod) {
@@ -53,6 +58,7 @@ class PaymentGateways
             GatewaysEnum::TAMARA => $this->tamara(),
             GatewaysEnum::TABBY => $this->tabby(),
             GatewaysEnum::CIB => $this->cib(),
+            GatewaysEnum::PAYMOB => $this->paymob(),
             default => $this->fawry(),
         };
     }

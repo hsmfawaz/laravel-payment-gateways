@@ -15,4 +15,6 @@ class GatewaysEnum
     public const TABBY = 'tabby';
 
     public const CIB = 'cib';
+
+    public const PAYMOB = 'paymob';
 }

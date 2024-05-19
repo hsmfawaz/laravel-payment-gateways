@@ -62,5 +62,12 @@ return [
             'merchant_logo'    => env('PAYMENT_CIB_MERCHANT_LOGO', ''),
             'merchant_website' => env('PAYMENT_CIB_MERCHANT_WEBSITE', ''),
         ],
+        GatewaysEnum::PAYMOB => [
+            'api_key'          => env('PAYMENT_PAYMOB_API_KEY', ''),
+            'security_key'     => env('PAYMENT_PAYMOB_SECURITY_KEY', ''),
+            'public_key'       => env('PAYMENT_PAYMOB_PUBLIC_KEY', ''),
+            'integration_id'   => env('PAYMENT_PAYMOB_INTEGRATION_ID', ''),
+            'iframe_id'        => env('PAYMENT_PAYMOB_IFRAME_ID', ''),
+        ],
     ],
 ];
