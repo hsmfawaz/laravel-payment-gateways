@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedDecimal('paid_amount', 12);
             $table->morphs('model');
             $table->string('status')->index();
+            $table->string('currency')->index();
             $table->json('gateway_response')->nullable();
             $table->timestamps();
         });

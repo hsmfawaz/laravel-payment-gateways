@@ -6,6 +6,7 @@ use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonPayment;
 use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Paymob\PaymobPayment;
+use Hsmfawaz\PaymentGateways\Gateways\MyFatoorah\MyFatoorahPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Stripe\StripePayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tabby\TabbyPayment;
 use Hsmfawaz\PaymentGateways\Gateways\Tamara\TamaraPayment;
@@ -20,8 +21,7 @@ class PaidPayment implements Arrayable
         public string $currency,
         public string $status,
         public PaymentCustomer $customer,
-        public AmazonPayment|FawryPayment|StripePayment|TabbyPayment|TamaraPayment|CIBPayment|PaymobPayment $payment,
-        public array $data = []
+        public AmazonPayment|FawryPayment|StripePayment|TabbyPayment|MyFatoorahPayment|PaymobPayment|CIBPayment $payment,
     ) {
     }
 
