@@ -51,10 +51,10 @@ class PaymobNewPayment implements NewPayment
             'order_id' => $order['id'],
             'integration_id' => PaymobConfig::get()->integration_id,
             "billing_data" => [
-                'email' => $this->payment->customer_email,
+                'email' => filled($this->payment->customer_email) ? $this->payment->customer_email : 'NA',
                 'first_name' => $this->payment->firstName(),
                 'last_name' => $this->payment->lastName(),
-                'phone_number' => $this->payment->customer_phone,
+                'phone_number' => filled($this->payment->customer_phone) ? $this->payment->customer_phone : 'NA',
                 'street' => 'NA',
                 'building' => 'NA',
                 'floor' => 'NA',
