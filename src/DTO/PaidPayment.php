@@ -22,6 +22,7 @@ class PaidPayment implements Arrayable
         public string $status,
         public PaymentCustomer $customer,
         public AmazonPayment|FawryPayment|StripePayment|TabbyPayment|MyFatoorahPayment|PaymobPayment|CIBPayment $payment,
+        public array $data = []
     ) {
     }
 
