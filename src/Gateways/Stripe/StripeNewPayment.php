@@ -31,6 +31,7 @@ class StripeNewPayment implements NewPayment
             'mode' => 'payment',
             'success_url' => $this->getRedirectUrl(),
             'cancel_url' => $this->getRedirectUrl(),
+            'metadata' => $this->payment->custom_data,
         ];
 
         if (filled($this->payment->customer_email)){
