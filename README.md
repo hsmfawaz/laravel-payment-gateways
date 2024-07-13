@@ -4,10 +4,22 @@ This package is a collection of online payment gateways that handle each gateway
 
 ## Installation
 
+add the following to your composer.json
+
+```JSON
+  "repositories": {
+    "hsm-packages": {
+      "type": "composer",
+      "url": "https://gitlab.com/api/v4/group/hsm-packages/-/packages/composer/packages.json"
+    }
+  },
+```
+
+
 You can install the package via composer:
 
 ```bash
-composer require hsmfawaz/payment-gateways
+composer require hsmfawaz/payment-gateways:5.x-dev
 ```
 
 You can publish and run the migrations with:
