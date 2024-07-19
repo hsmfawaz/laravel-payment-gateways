@@ -1,21 +1,24 @@
 <?php
 
-namespace Hsmfawaz\PaymentGateways\Gateways\Fawry;
+namespace Hsmfawaz\PaymentGateways\Gateways\AmazonPay;
 
 use Hsmfawaz\PaymentGateways\Contracts\Gateway;
 use Hsmfawaz\PaymentGateways\Contracts\NewPayment;
 use Hsmfawaz\PaymentGateways\DTO\PaidPayment;
 use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 
-class FawryGateway implements Gateway
+class AmazonGateway implements Gateway
 {
     public function create(PendingPayment $payment): NewPayment
     {
-        return new FawryNewPayment($payment);
+        return new AmazonNewPayment($payment);
     }
 
+    /**
+     * @throws \Hsmfawaz\PaymentGateways\Exceptions\PaymentNotFoundException
+     */
     public function get(string $ref): PaidPayment
     {
-        return (new FawryGetPayment())->handle($ref);
+        return (new AmazonGetPayment())->handle($ref);
     }
 }

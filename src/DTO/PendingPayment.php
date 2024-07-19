@@ -1,6 +1,6 @@
 <?php
 
-namespace Hsmfawaz\PaymentGateways;
+namespace Hsmfawaz\PaymentGateways\DTO;
 
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -20,7 +20,20 @@ class PendingPayment implements Arrayable
         public string $method = 'gateway',
         public string $cardToken = '',
         public string $cardCvv = '',
+        public bool|int $installment = false,
+        public array $custom_data = [],
+        public ?PendingPaymentRecurring $recurring = null,
     ) {
+    }
+
+    public function firstName()
+    {
+        return explode(' ', $this->customer_name)[0];
+    }
+
+    public function lastName()
+    {
+        return last(explode(' ', $this->customer_name));
     }
 
     public function totalAmount(): float

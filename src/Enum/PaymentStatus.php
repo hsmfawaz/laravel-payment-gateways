@@ -2,7 +2,7 @@
 
 namespace Hsmfawaz\PaymentGateways\Enum;
 
-class OrderStatus
+class PaymentStatus
 {
     public const PAID = 'paid';
     public const PENDING = 'pending';

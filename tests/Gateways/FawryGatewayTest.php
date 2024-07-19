@@ -1,13 +1,13 @@
 <?php
 
+use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Facades\PaymentGatewaysFacade;
-use Hsmfawaz\PaymentGateways\PendingPayment;
 use Illuminate\Support\Str;
 
 it('can get a payment', function () {
     $payment = PaymentGatewaysFacade::fawry()->get('eWg|random|1671514464.7811');
-    expect($payment->paid())->toBeTrue();
-    expect($payment->merchant_ref_number)->toBe('eWg|random|1671514464.7811');
+    expect($payment->payment->paid())->toBeTrue();
+    expect($payment->payment->merchant_ref_number)->toBe('eWg|random|1671514464.7811');
 });
 
 it('get capture token url', function () {
