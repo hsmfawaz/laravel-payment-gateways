@@ -8,6 +8,7 @@ class PaymobConfig
 {
     public string $api_key;
     public string $public_key = '';
+    public string $secret_key = '';
     public string $integration_id;
     public string $iframe;
     public int $api_version = 1;
@@ -34,6 +35,7 @@ class PaymobConfig
         }
         $this->base_url = $config['base_url'] ?? $this->base_url;
         $this->api_key = $config['api_key'];
+        $this->secret_key = $config['secret_key'];
         $this->public_key = $config['public_key'];
         $this->api_version = $config['api_version'] ?? 1;
         $this->integration_id = $config['integration_id'];

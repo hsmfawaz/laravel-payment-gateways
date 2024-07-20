@@ -68,6 +68,7 @@ return [
             'api_version' => (int) env('PAYMENT_PAYMOB_API_VERSION', '1'),
             'api_key' => env('PAYMENT_PAYMOB_API_KEY', ''),
             'base_url' => env('PAYMENT_PAYMOB_BASE_URL', 'https://accept.paymob.com/api'),
+            'secret_key' => env('PAYMENT_PAYMOB_SECRET_KEY', ''),
             'public_key' => env('PAYMENT_PAYMOB_PUBLIC_KEY', ''),
             'integration_id' => env('PAYMENT_PAYMOB_INTEGRATION_ID', ''),
             'iframe_id' => env('PAYMENT_PAYMOB_IFRAME_ID', ''),

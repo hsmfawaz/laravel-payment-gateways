@@ -65,7 +65,7 @@ class PaymobPayment implements Arrayable
 
     public function failed(): bool
     {
-        return !$this->paid() && !$this->pending() && !$this->refunded();
+        return ! $this->paid() && ! $this->pending() && ! $this->refunded();
     }
 
     public function attachTo(Model $model): ?GatewayPayment

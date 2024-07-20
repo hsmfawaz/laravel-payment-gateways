@@ -34,12 +34,12 @@ class PaymobNewIntentionPayment implements NewPayment
 
     private function baseUrl()
     {
-        return PaymobConfig::get()->base_url;
+        return str_replace('/api', '', PaymobConfig::get()->base_url);
     }
 
     private function createIntention()
     {
-        $response = Http::withToken(PaymobConfig::get()->api_key)
+        $response = Http::withToken(PaymobConfig::get()->secret_key)
                         ->asJson()
                         ->withHeader('Accept-Language', $this->payment->preferred_language)
                         ->acceptJson()
