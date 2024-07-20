@@ -29,7 +29,7 @@ class PaymobNewIntentionPayment implements NewPayment
     {
         $public = PaymobConfig::get()->public_key;
 
-        return $this->baseUrl()."/unifiedcheckout/?publicKey={$public}&clientSecret={$token}";
+        return $this->baseUrl()."unifiedcheckout/?publicKey={$public}&clientSecret={$token}";
     }
 
     private function baseUrl()
@@ -39,14 +39,18 @@ class PaymobNewIntentionPayment implements NewPayment
 
     private function createIntention()
     {
-        $response = Http::withToken(PaymobConfig::get()->api_key, 'Token')
+        $response = Http::withToken(PaymobConfig::get()->api_key)
                         ->asJson()
                         ->withHeader('Accept-Language', $this->payment->preferred_language)
+                        ->acceptJson()
                         ->post($this->baseUrl().'v1/intention/', [
                             'amount' => ceil(($this->payment->totalAmount() * 100)),
                             'currency' => $this->payment->currency,
                             'special_reference' => $this->payment->ref,
-                            'payment_methods' => [PaymobConfig::get()->integration_id],
+                            'payment_methods' => [(int) PaymobConfig::get()->integration_id],
+                            'items' => $this->payment->items,
+                            'notification_url' => $this->payment->return_url,
+                            'redirection_url' => $this->payment->return_url,
                             'customer' => [
                                 'email' => filled($this->payment->customer_email) ? $this->payment->customer_email : 'NA',
                                 'first_name' => $this->payment->firstName(),
@@ -68,7 +72,6 @@ class PaymobNewIntentionPayment implements NewPayment
                         ]);
 
         if ($response->json('client_secret') === null) {
-            dd($response->body());
             throw (new PaymentGatewayException($response->json('message', 'Cant get payment token')))
                 ->setResponse($response->body());
         }
