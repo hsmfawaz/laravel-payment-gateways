@@ -3,6 +3,7 @@
 namespace Hsmfawaz\PaymentGateways\Facades;
 
 use Hsmfawaz\PaymentGateways\Contracts\Gateway;
+use Hsmfawaz\PaymentGateways\DTO\PaidPayment;
 use Hsmfawaz\PaymentGateways\Gateways\AmazonPay\AmazonGateway;
 use Hsmfawaz\PaymentGateways\Gateways\CIB\CIBGateway;
 use Hsmfawaz\PaymentGateways\Gateways\Fawry\FawryGateway;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static string getRef(string|Model $identifier)
+ * @method static PaidPayment getPaymentFromRequest(string $gateway)
  * @method static FawryGateway fawry()
  * @method static StripeGateway stripe()
  * @method static AmazonGateway amazon()

@@ -7,7 +7,6 @@ use Hsmfawaz\PaymentGateways\DTO\PaymentCustomer;
 use Hsmfawaz\PaymentGateways\Enum\GatewaysEnum;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentNotFoundException;
-use Hsmfawaz\PaymentGateways\Gateways\Paymob\PaymobPayment;
 use Illuminate\Support\Facades\Http;
 
 class PaymobGetPayment
@@ -16,9 +15,9 @@ class PaymobGetPayment
     {
         $response = $this->request($ref);
 
-        if (!$response->ok()) {
+        if (! $response->ok()) {
             throw new PaymentNotFoundException(
-                $response->json('description', 'Cant fetch payment ref : ' . $ref)
+                $response->json('description', 'Cant fetch payment ref : '.$ref)
             );
         }
 
@@ -30,24 +29,25 @@ class PaymobGetPayment
     private function request(string $ref)
     {
         return Http::baseUrl(PaymobConfig::get()->base_url)
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $this->getAuthToken(),
-            ])
-            ->get('acceptance/transactions/' . $ref);
+                   ->withHeaders([
+                       'Authorization' => 'Bearer '.$this->getAuthToken(),
+                   ])
+                   ->acceptJson()
+                   ->get('acceptance/transactions/'.$ref);
     }
 
 
     private function getAuthToken()
     {
-        $response = Http::post(PaymobConfig::get()->base_url . '/auth/tokens', [
+        $response = Http::acceptJson()->post(PaymobConfig::get()->base_url.'auth/tokens', [
             'api_key' => PaymobConfig::get()->api_key,
         ]);
-        if (($response->json('token') ?? null) === null) {
-            throw new PaymentGatewayException($response->json('message',
-                'Cant get auth token'));
+
+        if ($response->json('token') === null) {
+            throw new PaymentGatewayException($response->json('message', 'Cant get auth token'));
         }
 
-        return $this->authToken = $response->json('token');
+        return $response->json('token');
     }
 
     private function toPaidPayment(PaymobPayment $payment): PaidPayment
@@ -59,7 +59,7 @@ class PaymobGetPayment
             currency: $payment->currency,
             status: $payment->status,
             customer: new PaymentCustomer(
-                name: $payment->order['shipping_data']['first_name'] . ' ' . $payment->order['shipping_data']['last_name'],
+                name: $payment->order['shipping_data']['first_name'].' '.$payment->order['shipping_data']['last_name'],
                 phone: $payment->order['shipping_data']['phone_number'],
                 email: $payment->order['shipping_data']['email'],
             ),
