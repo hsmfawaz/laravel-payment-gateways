@@ -68,7 +68,7 @@ class PaymobNewIntentionPayment implements NewPayment
                                 'city' => 'NA',
                                 'country' => 'NA',
                             ],
-                            'extras' => $this->payment->custom_data
+                            'extras' => (object) $this->payment->custom_data
                         ]);
 
         if ($response->json('client_secret') === null) {

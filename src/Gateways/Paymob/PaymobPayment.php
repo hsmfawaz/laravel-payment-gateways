@@ -17,9 +17,7 @@ class PaymobPayment implements Arrayable
     public bool $success;
     public bool $is_refunded;
     public array $order;
-
     public string $currency;
-
     public string $status;
     private string $type = GatewaysEnum::PAYMOB;
 
