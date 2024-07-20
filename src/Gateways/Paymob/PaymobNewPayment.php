@@ -2,7 +2,6 @@
 
 namespace Hsmfawaz\PaymentGateways\Gateways\Paymob;
 
-use Carbon\Carbon;
 use Hsmfawaz\PaymentGateways\Contracts\NewPayment;
 use Hsmfawaz\PaymentGateways\DTO\PendingPayment;
 use Hsmfawaz\PaymentGateways\Exceptions\PaymentGatewayException;
@@ -20,6 +19,7 @@ class PaymobNewPayment implements NewPayment
     public function toResponse(): string|array
     {
         $token = $this->getPaymentToken();
+
         return $this->paymentUrl($token);
     }
 
@@ -31,7 +31,8 @@ class PaymobNewPayment implements NewPayment
     public function paymentUrl($token): string
     {
         $iframe = PaymobConfig::get()->iframe;
-        return 'https://accept.paymob.com/api/acceptance/iframes/' . $iframe . '?payment_token=' . $token['token'];
+
+        return 'https://accept.paymob.com/api/acceptance/iframes/'.$iframe.'?payment_token='.$token['token'];
     }
 
     private function baseUrl()
@@ -43,10 +44,10 @@ class PaymobNewPayment implements NewPayment
     {
         $order = $this->createOrder();
 
-        $response = Http::post($this->baseUrl() . '/acceptance/payment_keys', [
+        $response = Http::post($this->baseUrl().'/acceptance/payment_keys', [
             'auth_token' => $this->authToken,
             'amount_cents' => ceil(($this->payment->totalAmount() * 100)),
-            'expiration' => 3600, // 1 hour
+            'expiration' => $this->payment->expire_after === 0 ? 3600 : $this->payment->expire_after,
             'currency' => $this->payment->currency,
             'order_id' => $order['id'],
             'integration_id' => PaymobConfig::get()->integration_id,
@@ -73,7 +74,7 @@ class PaymobNewPayment implements NewPayment
 
     private function getAuthToken()
     {
-        $response = Http::post($this->baseUrl() . '/auth/tokens', [
+        $response = Http::post($this->baseUrl().'/auth/tokens', [
             'api_key' => PaymobConfig::get()->api_key,
         ]);
         if (($response->json('token') ?? null) === null) {
@@ -86,7 +87,7 @@ class PaymobNewPayment implements NewPayment
 
     private function createOrder()
     {
-        $response = Http::post($this->baseUrl() . '/ecommerce/orders', [
+        $response = Http::post($this->baseUrl().'/ecommerce/orders', [
             'auth_token' => $this->authToken,
             'delivery_needed' => 'false',
             'amount_cents' => ceil(($this->payment->totalAmount() * 100)),

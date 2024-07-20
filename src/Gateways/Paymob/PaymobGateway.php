@@ -16,6 +16,8 @@ class PaymobGateway implements Gateway
 
     public function create(PendingPayment $payment): NewPayment
     {
-        return new PaymobNewPayment($payment);
+        return PaymobConfig::get()->api_version === 1
+            ? new PaymobNewPayment($payment)
+            : new PaymobNewIntentionPayment($payment);
     }
 }
