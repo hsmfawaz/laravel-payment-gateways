@@ -21,7 +21,7 @@ class FawryNewPayment implements NewPayment
 
     public function paymentUrl(): string
     {
-        $response = Http::post($this->baseUrl(), $this->paymentData());
+        $response = Http::timeout(30)->post($this->baseUrl(), $this->paymentData());
         if (! $response->ok() || $response->json('code') !== null) {
             throw new PaymentGatewayException($response->json('description',
                 'Cant initiate a new payment'));
