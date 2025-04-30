@@ -75,10 +75,10 @@ class TabbyNewPayment implements NewPayment
                     "address" => "3764 Al Urubah Rd",
                 ],
                 "buyer_history" => [
-                    "registered_since" => now()->toIso8601String(),
-                    "loyalty_level" => 0,
+                    "registered_since" => data_get($this->payment->custom_data,'registered_since',now()->toIso8601String()),
+                    "loyalty_level" => data_get($this->payment->custom_data,'loyalty_level',0),
                 ],
-                "order_history" => [],
+                "order_history" => data_get($this->payment->custom_data, 'order_history', []),
                 "order" => [
                     "reference_id" => $this->payment->ref,
                     "items" => $this->getItems(),
