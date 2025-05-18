@@ -2,6 +2,19 @@
 
 This package is a collection of online payment gateways that handle each gateway process
 
+## Available Payment Gateways
+
+The package supports the following payment gateways:
+
+- **AmazonPay** - Secure payment solution leveraging Amazon accounts
+- **CIB** - Commercial International Bank payment gateway for Egyptian markets
+- **Fawry** - Leading e-payment network in Egypt
+- **MyFatoorah** - Comprehensive payment solution for the MENA region
+- **Paymob** - Egyptian payment facilitator supporting multiple payment methods
+- **Stripe** - Global payment processing platform
+- **Tabby** - Buy now, pay later service for UAE and Saudi Arabia
+
+
 ## Installation
 You can install the package via composer:
 
