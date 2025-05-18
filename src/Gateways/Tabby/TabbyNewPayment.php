@@ -51,7 +51,7 @@ class TabbyNewPayment implements NewPayment
 
         return Http::asJson()
             ->acceptJson()
-            ->withToken($config->public_key)
+            ->withToken($config->security_key)
             ->baseUrl("https://api.tabby.ai/api/v2");
     }
 
